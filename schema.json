@@ -1,0 +1,73 @@
+{
+  "fieldName": "Existing BIC/DN/ID",
+  "fieldId": "existingBICAndDN",
+  "fieldType": "v6ExpandableRowTable",
+
+  "layout": {
+    "row": 2,
+    "column": 1
+  },
+
+  "dataDestination": "maintenance_data",
+  "prePopulateData": true,
+
+  "expandBehavior": {
+    "expandByDefaultIfSingleRow": true,
+    "allowMultipleExpanded": true
+  },
+
+  "dataSource": {
+    "type": "api",
+
+    "loadStrategy": "eager",
+    "callWhen": "onInit",
+
+    "url": "/api/reference-documents/enrichment",
+
+    "method": "POST",
+
+    "request": {
+      "payloadFromForm": true,
+      "payloadMapping": {
+        "accounts": {
+          "formField": "ACCT_NUMBER",
+          "type": "array"
+        }
+      }
+    },
+
+    "responseMapping": {
+      "groupBy": "ACCT_NUMBER",
+      "detailArrayField": "details"
+    }
+  },
+
+  "masterRowHeaders": [
+    {
+      "headerName": "Account Number",
+      "field": "ACCT_NUMBER",
+      "enableRowGroup": true,
+      "sortable": true,
+      "filter": true,
+      "cellRenderer": "group"
+    }
+  ],
+
+  "detailRowHeaders": [
+    {
+      "headerName": "Process Type",
+      "field": "PRCS_TYPE",
+      "filter": true
+    },
+    {
+      "headerName": "Address Type",
+      "field": "ADRS_TYPE",
+      "filter": true
+    },
+    {
+      "headerName": "Address Data",
+      "field": "ADRS_DATA",
+      "filter": true
+    }
+  ]
+}
