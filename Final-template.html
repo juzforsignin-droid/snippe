@@ -1,0 +1,20 @@
+<div *ngIf="errorMessage" class="error-container">
+  {{ errorMessage }}
+  <button (click)="retry()">Retry</button>
+</div>
+
+<ag-grid-angular
+  *ngIf="!errorMessage"
+  class="ag-theme-alpine"
+  style="width: 100%; height: 500px;"
+  [rowData]="rowData"
+  [columnDefs]="masterColumnDefs"
+  [defaultColDef]="defaultColDef"
+  [masterDetail]="true"
+  [detailCellRendererParams]="detailCellRendererParams"
+  [detailRowAutoHeight]="true"
+  [suppressRowClickSelection]="true"
+  [animateRows]="true"
+  (gridReady)="onGridReady($event)"
+  (firstDataRendered)="onFirstDataRendered()">
+</ag-grid-angular>
