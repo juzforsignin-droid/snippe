@@ -1,19 +1,32 @@
 export class ExpandableRowTableConfig {
 
-  // ---------------- Basic metadata ----------------
   fieldName!: string;
   fieldId!: string;
   fieldType!: string;
-  dataDestination?: string;
-  prePopulateData?: boolean;
 
-  // ---------------- Expand behavior ----------------
   expandBehavior!: {
-    expandByDefaultIfSingleRow: boolean;
-    allowMultipleExpanded: boolean;
+    expandByDefaultIfSingleRow?: boolean;
+    allowMultipleExpanded?: boolean;
   };
 
-  // ---------------- Master grid headers ----------------
+  masterDataSource!: {
+    type: 'FORM' | 'API';
+    formSource?: {
+      fieldName: string;
+      filter?: {
+        field: string;
+        operator: string;
+        value: any;
+      };
+    };
+    url?: string;
+    method?: string;
+    responseMapping?: {
+      recordsField?: string;
+      masterKeyField?: string;
+    };
+  };
+
   masterRowHeaders!: Array<{
     headerName: string;
     field: string;
@@ -23,65 +36,40 @@ export class ExpandableRowTableConfig {
     cellRenderer?: string;
   }>;
 
-  // ---------------- Detail grid headers ----------------
   detailRowHeaders!: Array<{
     headerName: string;
     field: string;
     filter?: boolean;
   }>;
 
-  // ---------------- Service configuration ----------------
   service!: {
     clientIdentifier?: string;
     target?: string;
     virtualTableName?: string;
     columnName?: string;
-    columnValue?: string;
-
+    columnValue: string;
     selectColumns?: string[];
-
-    method: 'GET' | 'POST';
+    method: string;
     url: string;
-
     responseMapping: {
-      tableNameField: string;
+      masterKeyField: string;
       valuesField: string;
-      childRowsField: string;
+      childRowsField?: string;
     };
   };
 
-  // ---------------- Constructor ----------------
   constructor(config: any) {
-
-    // basic metadata
     this.fieldName = config.fieldName;
     this.fieldId = config.fieldId;
     this.fieldType = config.fieldType;
-    this.dataDestination = config.dataDestination;
-    this.prePopulateData = config.prePopulateData;
 
-    // expand behavior
-    this.expandBehavior = config.expandBehavior;
+    this.expandBehavior = config.expandBehavior ?? {};
 
-    // grid headers
-    this.masterRowHeaders = config.masterRowHeaders || [];
-    this.detailRowHeaders = config.detailRowHeaders || [];
+    this.masterDataSource = config.masterDataSource;
 
-    // service configuration
-    this.service = {
-      clientIdentifier: config.service?.clientIdentifier,
-      target: config.service?.target,
-      virtualTableName: config.service?.virtualTableName,
-      columnName: config.service?.columnName,
-      columnValue: config.service?.columnValue,
-      selectColumns: config.service?.selectColumns || [],
-      method: config.service?.method,
-      url: config.service?.url,
-      responseMapping: {
-        tableNameField: config.service?.responseMapping?.tableNameField,
-        valuesField: config.service?.responseMapping?.valuesField,
-        childRowsField: config.service?.responseMapping?.childRowsField
-      }
-    };
+    this.masterRowHeaders = config.masterRowHeaders ?? [];
+    this.detailRowHeaders = config.detailRowHeaders ?? [];
+
+    this.service = config.service;
   }
 }
