@@ -1,15 +1,31 @@
 {
-  "fieldName": "Existing BIC/DN/ID",
+  "fieldName": "Existing b",
   "fieldId": "existingBICAndDN",
   "fieldType": "v6ExpandableRowTable",
-  "dataDestination": "maintenance_data",
-  "prePopulateData": true,
 
   "expandBehavior": {
     "expandByDefaultIfSingleRow": true,
     "allowMultipleExpanded": true
   },
 
+  /* ----------------------------------------------------
+   * MASTER DATA SOURCE CONFIGURATION
+   * ---------------------------------------------------- */
+  "masterDataSource": {
+    "type": "FORM",
+    "formSource": {
+      "fieldName": "accounts",
+      "filter": {
+        "field": "status",
+        "operator": "EQUALS",
+        "value": "OPEN"
+      }
+    }
+  },
+
+  /* ----------------------------------------------------
+   * MASTER GRID HEADERS
+   * ---------------------------------------------------- */
   "masterRowHeaders": [
     {
       "headerName": "Account Number",
@@ -21,6 +37,9 @@
     }
   ],
 
+  /* ----------------------------------------------------
+   * DETAIL GRID HEADERS
+   * ---------------------------------------------------- */
   "detailRowHeaders": [
     {
       "headerName": "Process Type",
@@ -39,10 +58,13 @@
     }
   ],
 
+  /* ----------------------------------------------------
+   * DETAIL SERVICE CONFIGURATION
+   * ---------------------------------------------------- */
   "service": {
-    "clientIdentifier": "RDH",
+    "clientIdentifier": "hg",
     "target": "DB2",
-    "virtualTableName": "TAM307_ACCT",
+    "virtualTableName": "_ACCT",
     "columnName": "ACCOUNT",
     "columnValue": "AcctNumberArray",
 
@@ -55,8 +77,13 @@
     "method": "GET",
     "url": "/getCall",
 
+    /* ------------------------------------------------
+     * GENERIC RESPONSE CONTRACT
+     * Backend always returns:
+     * { tableName, values, childRows }
+     * ------------------------------------------------ */
     "responseMapping": {
-      "tableNameField": "tableName",
+      "masterKeyField": "ACCT_NUMBER",
       "valuesField": "values",
       "childRowsField": "childRows"
     }
